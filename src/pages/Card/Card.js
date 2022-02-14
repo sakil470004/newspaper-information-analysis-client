@@ -3,16 +3,18 @@ import React from 'react'
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 
-export default function Card() {
+export default function Card({ newsSingleData }) {
+
+    const { published, start_year, end_year, topic, url, added, title, region } = newsSingleData
     return (
         <Box sx={{ p: 1 }}>
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography>
-                    Published : 2000 may
+                    Published : {published}
                 </Typography>
                 <Typography>
-                    Added : 2022 may
+                    Added : {added}
                 </Typography>
             </Box>
 
@@ -23,37 +25,37 @@ export default function Card() {
                     id="panel2a-header"
                 >
 
-                    <Typography variant="h6">U.S. natural gas consumption is expected to increase during much of the projection period.</Typography>
+                    <Typography variant="h6">{title}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Typography>
                         </Typography>
 
-                        <Button sx={{ m: 1 }}><a style={{ textDecoration: 'none' }} href='http://www.google.com' rel="noreferrer" target='_blank'>Go TO</a></Button>
+                        <Button sx={{ m: 1 }}><a style={{ textDecoration: 'none' }} href={url} rel="noreferrer" target='_blank'>Go TO</a></Button>
 
                     </Box>
                     <Divider />
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Typography>
-                            Region: Northern America
+                            Region: {region}
                         </Typography>
                         <Typography>
-                            Topic : Gas
+                            Topic : {topic}
                         </Typography>
                     </Box>
                     <Divider />
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Typography>
-                            Start Year : 2000
+                            Start Year : {start_year}
                         </Typography>
                         <Typography>
-                            End Year : 2022
+                            End Year : {end_year}
                         </Typography>
                     </Box>
                 </AccordionDetails>
             </Accordion>
-         
+
         </Box>
     )
 }
