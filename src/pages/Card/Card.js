@@ -11,10 +11,10 @@ export default function Card({ newsSingleData }) {
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography>
-                    Published : {published}
+                    Published : {published?published:"No Data Now"}
                 </Typography>
                 <Typography>
-                    Added : {added}
+                    Added : {added?added:"No Data Now"}
                 </Typography>
             </Box>
 
@@ -32,13 +32,13 @@ export default function Card({ newsSingleData }) {
                         <Typography>
                         </Typography>
 
-                        <Button sx={{ m: 1 }}><a style={{ textDecoration: 'none' }} href={url} rel="noreferrer" target='_blank'>Go TO</a></Button>
+                        <Button sx={{ m: 1 }}><a style={{ textDecoration: 'none' }} href={url?url:"#"} rel="noreferrer" target='_blank'>{url?"Go TO":"Link isn't available"}</a></Button>
 
                     </Box>
                     <Divider />
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Typography>
-                            Region: {region}
+                            Region: {region?region:"Not Added"}
                         </Typography>
                         <Typography>
                             Topic : {topic}
@@ -47,10 +47,10 @@ export default function Card({ newsSingleData }) {
                     <Divider />
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Typography>
-                            Start Year : {start_year}
+                            Start Year : {start_year?start_year:"No Data Now"}
                         </Typography>
                         <Typography>
-                            End Year : {end_year}
+                            End Year : {end_year?end_year:"No Data Now"}
                         </Typography>
                     </Box>
                 </AccordionDetails>
