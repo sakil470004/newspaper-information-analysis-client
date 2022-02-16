@@ -9,8 +9,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
+import { Link } from 'react-router-dom';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+// const pages = ['Products', 'Pricing', 'Blog'];
 
 const ResponsiveAppBar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -66,11 +67,18 @@ const ResponsiveAppBar = () => {
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page}</Typography>
+                            
+                                <MenuItem  onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center">
+                                    <Link style={{textDecoration: 'none'}} to='/'>Home</Link>
+                                    </Typography>
                                 </MenuItem>
-                            ))}
+                                <MenuItem  onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center">
+                                    <Link style={{textDecoration: 'none'}} to='/allNews'>All News</Link>
+                                    </Typography>
+                                </MenuItem>
+                           
                         </Menu>
                     </Box>
                     <Typography
@@ -82,15 +90,19 @@ const ResponsiveAppBar = () => {
                         MI
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.map((page) => (
                             <Button
-                                key={page}
                                 onClick={handleCloseNavMenu}
                                 sx={{ my: 2, color: 'white', display: 'block' }}
                             >
-                                {page}
+                             <Link style={{color: 'white',textDecoration: 'none'}} to='/'>Home</Link>
                             </Button>
-                        ))}
+                            <Button
+                                onClick={handleCloseNavMenu}
+                                sx={{ my: 2, color: 'white', display: 'block' }}
+                            >
+                            <Link style={{color: 'white',textDecoration: 'none'}} to='/allNews'>All News</Link>
+                            </Button>
+
                     </Box>
 
                  

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import './ResponsiveBar.css';
 import ButtonGroupCustom from './ButtonGroupCustom';
+import { Container } from '@mui/material';
 
 
 // const sample = [
@@ -58,7 +59,6 @@ const Chart = () => {
 			.then(res => res.json())
 			.then(data => {
 				const oddData = data.news;
-				console.log(oddData)
 				const newData = []
 				const first = barVariables[0];
 				const second = barVariables[1]
@@ -70,7 +70,6 @@ const Chart = () => {
 					newData.push(obj);
 					return obj
 				})
-				console.log(newData)
 				// setSamples(newData);
 
 				const count = data.count;
@@ -96,7 +95,7 @@ const Chart = () => {
 
 	}, [page, selectButton])
 
-	const margin = { top: 30, right: 30, bottom: 0, left: 60 }
+	const margin = { top: 30, right: 10, bottom: 0, left: 60 }
 
 	function DrawChart(data) {
 
@@ -144,7 +143,7 @@ const Chart = () => {
 	}
 
 	return (
-		<div>
+		<Container>
 			<div style={{ display: 'flex' }}>
 				<h3 style={{ width: '70%' }}>The Bar Show {barVariables[0].toLocaleUpperCase()} vs {barVariables[1].toLocaleUpperCase()} Show difference {size} Data </h3>
 				<ButtonGroupCustom
@@ -169,7 +168,7 @@ const Chart = () => {
 						>{number + 1}</button>)
 				}
 			</div>
-		</div>
+		</Container>
 	)
 }
 
