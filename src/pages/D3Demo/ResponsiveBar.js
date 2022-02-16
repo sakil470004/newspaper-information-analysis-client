@@ -55,7 +55,7 @@ const Chart = () => {
 
 
 	useEffect(() => {
-		fetch(`http://localhost:5000/newspapers?page=${page}&&size=${size}`)
+		fetch(`https://user-data-collector.herokuapp.com/newspapers?page=${page}&&size=${size}`)
 			.then(res => res.json())
 			.then(data => {
 				const oddData = data.news;

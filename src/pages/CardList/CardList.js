@@ -9,14 +9,14 @@ export default function CardList() {
     const [page, setPage] = useState(0);
     const [pageCount, setPageCount] = useState(0);
     // useEffect(() => {
-    //     fetch('http://localhost:5000/newspapers')
+    //     fetch('https://user-data-collector.herokuapp.com/newspapers')
     //         .then(res => res.json())
     //         .then(data => setNews(data))
     // }, [])
     // for pageNation
     const size = 20;
     useEffect(() => {
-        fetch(`http://localhost:5000/newspapers?page=${page}&&size=${size}`)
+        fetch(`https://user-data-collector.herokuapp.com/newspapers?page=${page}&&size=${size}`)
             .then(res => res.json())
             .then(data => {
                 setNews(data.news);
