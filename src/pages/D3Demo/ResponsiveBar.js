@@ -1,38 +1,57 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import './ResponsiveBar.css';
+import ButtonGroupCustom from './ButtonGroupCustom';
 
 
-const sample = [
-	{ category: 'A', quantity: 40 },
-	{ category: 'B', quantity: 151 },
-	{ category: 'C', quantity: 89 },
-	{ category: 'D', quantity: 124 },
-	{ category: 'E', quantity: 100 },
-	{ category: 'F', quantity: 200 },
-	{ category: 'G', quantity: 120 },
-	{ category: 'H', quantity: 50 },
-	{ category: 'I', quantity: 60 },
-	{ category: 'K', quantity: 70 },
-	{ category: 'L', quantity: 61 },
-]
+// const sample = [
+// 	{ category: 'A', quantity: 40 },
+// 	{ category: 'B', quantity: 151 },
+// 	{ category: 'C', quantity: 89 },
+// 	{ category: 'D', quantity: 124 },
+// 	{ category: 'E', quantity: 100 },
+// 	{ category: 'F', quantity: 200 },
+// 	{ category: 'G', quantity: 120 },
+// 	{ category: 'H', quantity: 50 },
+// 	{ category: 'I', quantity: 60 },
+// 	{ category: 'K', quantity: 70 },
+// 	{ category: 'L', quantity: 61 },
+// ]
 
 
 const Chart = () => {
 
 	const d3Chart = useRef()
 	// Ref for updating dimention 
-	const [dimensions, setDimensions] = useState({
-		width: window.innerWidth,
-		height: window.innerHeight
-	})
-	const [samples, setSamples] = useState([])
+	// const [dimensions, setDimensions] = useState({
+	// 	width: window.innerWidth,
+	// 	height: window.innerHeight
+	// })
+	const barVariableNames = [
+		['region', 'relevance'],
+		['region', 'intensity'],
+		['region', 'likelihood'],
+		['region', 'start_year'],
+		['region', 'end_year'],
+		['topic', 'relevance'],
+		['topic', 'intensity'],
+		['topic', 'likelihood'],
+		['topic', 'start_year'],
+		['topic', 'end_year'],
+	]
+	// set variable according to user selection
+	const [barVariables, setBarVariables] = useState(['region', 'relevance'])
+	// const [samples, setSamples] = useState([])
 	// Ref for resize event update
 
 	const [page, setPage] = useState(0);
+	const [size, setSize] = useState(10);
+
 	const [pageCount, setPageCount] = useState(0);
-	// for pageNation
-	const size = 10;
+	// for button group 
+	const [selectButton, setSelectButton] = useState(0)
+
+
 
 	useEffect(() => {
 		fetch(`http://localhost:5000/newspapers?page=${page}&&size=${size}`)
@@ -41,16 +60,18 @@ const Chart = () => {
 				const oddData = data.news;
 				console.log(oddData)
 				const newData = []
+				const first = barVariables[0];
+				const second = barVariables[1]
 				oddData.map(dt => {
-
 					let obj = {
-						category: dt.region ? dt.region : 'No Region',
-						quantity: parseInt(dt.relevance) ? parseInt(dt.relevance) : 0
+						category: dt[first] ? dt[first] : `No ${first.toUpperCase()} Data`,
+						quantity: parseInt(dt[second]) ? parseInt(dt[second]) : 0
 					}
 					newData.push(obj);
+					return obj
 				})
 				console.log(newData)
-				setSamples(newData);
+				// setSamples(newData);
 
 				const count = data.count;
 				const pageNumber = Math.ceil(count / size);
@@ -73,7 +94,7 @@ const Chart = () => {
 		// })
 
 
-	}, [page])
+	}, [page, selectButton])
 
 	const margin = { top: 30, right: 30, bottom: 0, left: 60 }
 
@@ -124,11 +145,19 @@ const Chart = () => {
 
 	return (
 		<div>
-			<h3>The Bar Show Region vs Relevance Show difference {size} Data </h3>
+			<div style={{ display: 'flex' }}>
+				<h3 style={{ width: '70%' }}>The Bar Show {barVariables[0].toLocaleUpperCase()} vs {barVariables[1].toLocaleUpperCase()} Show difference {size} Data </h3>
+				<ButtonGroupCustom
+					selectButton={selectButton}
+					setSelectButton={setSelectButton}
+					setBarVariables={setBarVariables}
+					barVariableNames={barVariableNames}
+				/>
+			</div>
 			<div id='d3demo'>
 				<svg ref={d3Chart}></svg>
 			</div>
-			<h3>Region {`---->>>>`}</h3>
+			<h3> {`${barVariables[0].toUpperCase()} ---->>>>`}</h3>
 
 			<div className="pagination">
 				{
