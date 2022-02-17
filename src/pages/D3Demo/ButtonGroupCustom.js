@@ -12,11 +12,6 @@ export default function ButtonGroupCustom({ selectButton, setSelectButton, setBa
         const currentParameter = event.target.value;
         setBarVariables(barVariableNames[parseInt(currentParameter)])
         setSelectButton(currentParameter)
-
-        // const selectedMed = medicineDetails.find(mD => currentMedicineId === mD._id)
-        // setCurrentSelectedMedicine(selectedMed);
-        // setSelectButton(currentMedicineId)
-
     };
 
 
@@ -33,12 +28,6 @@ export default function ButtonGroupCustom({ selectButton, setSelectButton, setBa
                     label="Change Parameter"
                 >
 
-                    {/* {medicineDetails.map(mD =>
-                        < MenuItem
-                            key={mD._id}
-                            value={mD._id}>{mD.medicineName}</MenuItem>
-                    )
-                    } */}
                     <MenuItem
                         value='0'
                     >Region VS Relevance

@@ -5,30 +5,11 @@ import ButtonGroupCustom from './ButtonGroupCustom';
 import { Container } from '@mui/material';
 
 
-// const sample = [
-// 	{ category: 'A', quantity: 40 },
-// 	{ category: 'B', quantity: 151 },
-// 	{ category: 'C', quantity: 89 },
-// 	{ category: 'D', quantity: 124 },
-// 	{ category: 'E', quantity: 100 },
-// 	{ category: 'F', quantity: 200 },
-// 	{ category: 'G', quantity: 120 },
-// 	{ category: 'H', quantity: 50 },
-// 	{ category: 'I', quantity: 60 },
-// 	{ category: 'K', quantity: 70 },
-// 	{ category: 'L', quantity: 61 },
-// ]
-
 
 const Chart = () => {
 
 	const d3Chart = useRef()
-	// Ref for updating dimention 
-	// const [dimensions, setDimensions] = useState({
-	// 	width: window.innerWidth,
-	// 	height: window.innerHeight
-	// })
-	const barVariableNames = [
+	 barVariableNames = [
 		['region', 'relevance'],
 		['region', 'intensity'],
 		['region', 'likelihood'],
@@ -79,19 +60,7 @@ const Chart = () => {
 				d3.selectAll('g').remove()
 				DrawChart(newData)
 			})
-		// Listen for any resize event update
-		// window.addEventListener('resize', () => {
-		// 	setDimensions({
-		// 		width: window.innerWidth,
-		// 		height: window.innerHeight
-		// 	})
-
-		// 	// If resize, remove the previous chart
-		// 	if (update.current) {
-		// 		d3.selectAll('g').remove()
-		// 	} else { update.current = true }
-		// })
-
+	
 
 	}, [page, selectButton])
 
