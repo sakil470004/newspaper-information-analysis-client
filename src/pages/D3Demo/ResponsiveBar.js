@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import './ResponsiveBar.css';
 import ButtonGroupCustom from './ButtonGroupCustom';
-import { Container } from '@mui/material';
+import { CircularProgress, Container } from '@mui/material';
 
 
 
 const Chart = () => {
 
 	const d3Chart = useRef()
-	 barVariableNames = [
+	const barVariableNames = [
 		['region', 'relevance'],
 		['region', 'intensity'],
 		['region', 'likelihood'],
@@ -28,6 +28,7 @@ const Chart = () => {
 
 	const [page, setPage] = useState(0);
 	const [size, setSize] = useState(10);
+	const [isLoading, setLoading] = useState(false)
 
 	const [pageCount, setPageCount] = useState(0);
 	// for button group 
@@ -36,6 +37,7 @@ const Chart = () => {
 
 
 	useEffect(() => {
+		setLoading(true)
 		fetch(`https://user-data-collector.herokuapp.com/newspapers?page=${page}&&size=${size}`)
 			.then(res => res.json())
 			.then(data => {
@@ -58,9 +60,10 @@ const Chart = () => {
 				setPageCount(pageNumber);
 				// console.log(samples)
 				d3.selectAll('g').remove()
+				setLoading(false)
 				DrawChart(newData)
 			})
-	
+
 
 	}, [page, selectButton])
 
@@ -112,21 +115,25 @@ const Chart = () => {
 	}
 
 	return (
-		<Container>
-			<div style={{ display: 'flex' }}>
-				<h3 style={{ width: '70%' }}>The Bar Show {barVariables[0].toLocaleUpperCase()} vs {barVariables[1].toLocaleUpperCase()} Show difference {size} Data </h3>
-				<ButtonGroupCustom
-					selectButton={selectButton}
-					setSelectButton={setSelectButton}
-					setBarVariables={setBarVariables}
-					barVariableNames={barVariableNames}
-				/>
-			</div>
-			<div id='d3demo'>
-				<svg ref={d3Chart}></svg>
-			</div>
-			<h3> {`${barVariables[0].toUpperCase()} ---->>>>`}</h3>
 
+		<Container >
+			{isLoading ? <CircularProgress style={{height:'680px'}}/> :
+				<div>
+					<div style={{ display: 'flex' }}>
+						<h3 style={{ width: '70%' }}>The Bar Show {barVariables[0].toLocaleUpperCase()} vs {barVariables[1].toLocaleUpperCase()} Show difference {size} Data </h3>
+						<ButtonGroupCustom
+							selectButton={selectButton}
+							setSelectButton={setSelectButton}
+							setBarVariables={setBarVariables}
+							barVariableNames={barVariableNames}
+						/>
+					</div>
+					<div id='d3demo'>
+						<svg ref={d3Chart}></svg>
+					</div>
+					<h3> {`${barVariables[0].toUpperCase()} ---->>>>`}</h3>
+				</div>
+			}
 			<div className="pagination">
 				{
 					[...Array(pageCount).keys()]
@@ -137,7 +144,10 @@ const Chart = () => {
 						>{number + 1}</button>)
 				}
 			</div>
+
+
 		</Container>
+
 	)
 }
 
