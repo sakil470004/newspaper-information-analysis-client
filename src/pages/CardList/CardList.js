@@ -10,12 +10,6 @@ export default function CardList() {
     const [pageCount, setPageCount] = useState(0);
     const [isLoading, setLoading] = useState(false)
 
-    // useEffect(() => {
-    //     fetch('https://user-data-collector.herokuapp.com/newspapers')
-    //         .then(res => res.json())
-    //         .then(data => setNews(data))
-    // }, [])
-    // for pageNation
     const size = 20;
     useEffect(() => {
         setLoading(true)
