@@ -42,16 +42,16 @@ export default function ButtonGroupCustom({ selectButton, setSelectButton, setBa
                     >
                         Region VS Likelihood
                     </MenuItem>
-                    <MenuItem
+                    {/* <MenuItem
                         value='3'
                     >
                         Region VS Start Year
-                    </MenuItem>
-                    <MenuItem
+                    </MenuItem> */}
+                    {/* <MenuItem
                         value='4'
                     >
                         Region VS End Year
-                    </MenuItem>
+                    </MenuItem> */}
                     <MenuItem
                         value='5'
                     >
@@ -67,16 +67,16 @@ export default function ButtonGroupCustom({ selectButton, setSelectButton, setBa
                     >
                         Topic VS Likelihood
                     </MenuItem>
-                    <MenuItem
+                    {/* <MenuItem
                         value='8'
                     >
                         Topic VS Start Year
-                    </MenuItem>
-                    <MenuItem
+                    </MenuItem> */}
+                    {/* <MenuItem
                         value='9'
                     >
                         Topic VS End Year
-                    </MenuItem>
+                    </MenuItem> */}
 
                 </Select>
             </FormControl>

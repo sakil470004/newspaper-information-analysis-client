@@ -28,7 +28,7 @@ export default function CardList() {
     return (
         <Container>
             {isLoading ? <CircularProgress style={{ height: '680px' }} /> :
-                <Grid container spacing={1} style={{ marginBottom: '5px' }}>
+                <Grid container spacing={3} style={{ marginBottom: '5px' }}>
                     {
                         news.map(newsSingleData =>
 
