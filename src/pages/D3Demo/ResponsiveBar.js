@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import './ResponsiveBar.css';
 import ButtonGroupCustom from './ButtonGroupCustom';
-import { CircularProgress, Container } from '@mui/material';
+import { Button, CircularProgress, Container, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup } from '@mui/material';
+import Card from '../Card/Card';
 
 
 
@@ -26,22 +27,56 @@ const Chart = () => {
 	// const [samples, setSamples] = useState([])
 	// Ref for resize event update
 
+	const [searchField, setSearchField] = useState('')
+	const [news, setNews] = useState([])
+	const [allNews, setAllNews] = useState([])
 	const [page, setPage] = useState(0);
 	const [size, setSize] = useState(10);
 	const [isLoading, setLoading] = useState(false)
+	const [filteredNews, setFilteredNews] = useState([])
 
 	const [pageCount, setPageCount] = useState(0);
 	// for button group 
 	const [selectButton, setSelectButton] = useState(0)
+	const [radioValue, setRadioValue] = React.useState('title');
+
+	// search function
+	const handleOnChange = (e) => {
+		setSearchField(e.target.value)
+	}
+	const handleSearch = () => {
+		setLoading(true)
+		filter()
+		setLoading(false)
+	}
+	const filter = () => {
+		const ftNews = allNews.filter(nws => {
+			return nws[radioValue].toLowerCase().includes(searchField.toLowerCase())
+		})
+		setFilteredNews(ftNews)
+	}
+	// radio button 
 
 
-
+	const handleRadioChange = (event) => {
+		setRadioValue(event.target.value);
+	};
+	useEffect(() => {
+		setLoading(true)
+		fetch('https://user-data-collector.herokuapp.com/newspapersAll')
+			.then(res => res.json())
+			.then(data => {
+				setAllNews(data)
+				setLoading(false)
+			})
+	}, [])
 	useEffect(() => {
 		setLoading(true)
 		fetch(`https://user-data-collector.herokuapp.com/newspapers?page=${page}&&size=${size}`)
 			.then(res => res.json())
 			.then(data => {
 				const oddData = data.news;
+				setNews(oddData)
 				const newData = []
 				const first = barVariables[0];
 				const second = barVariables[1]
@@ -117,36 +152,91 @@ const Chart = () => {
 	return (
 
 		<Container >
-			{isLoading ? <CircularProgress style={{height:'680px'}}/> :
+			<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+				<FormControl >
+					<FormLabel id="demo-row-radio-buttons-group-label">Search By {radioValue}</FormLabel>
+					<RadioGroup
+						row
+						aria-labelledby="demo-row-radio-buttons-group-label"
+						name="row-radio-buttons-group"
+						value={radioValue}
+						onChange={handleRadioChange}
+					>
+						<FormControlLabel value="title" control={<Radio />} label="Title" />
+						<FormControlLabel value="topic" control={<Radio />} label="Topic" />
+						<FormControlLabel value="region" control={<Radio />} label="Region" />
+						<FormControlLabel value="sector" control={<Radio />} label="Sector" />
+						<FormControlLabel value="pestle" control={<Radio />} label="Pestle" />
+						<FormControlLabel value="source" control={<Radio />} label="Source" />
+						<FormControlLabel value="country" control={<Radio />} label="Country" />
+
+					</RadioGroup>
+				</FormControl>
+				<input style={{ borderRadius: '15px', padding: '15px', fontSize: '20px', margin: '2rem' }} onChange={handleOnChange} placeholder={`Search for ${radioValue}`}></input>
+				<Button onClick={handleSearch}>Search</Button>
+			</div>
+			{/* {(isLoading && !searchField.length) ? <CircularProgress style={{ height: '680px' }} /> : */}
+			{(searchField.length && !isLoading) &&
+				<Grid container spacing={3} style={{ marginBottom: '5px' }}>
+					{
+						filteredNews.map(newsSingleData =>
+
+							<Grid sx={{ borderRadius: 4 }} item xs={12} sm={6}
+								key={newsSingleData._id}
+							>
+								<Card newsSingleData={newsSingleData} />
+							</Grid>
+						)
+					}
+				</Grid>
+			}
+
+			{!searchField.length &&
 				<div>
-					<div style={{ display: 'flex' }}>
-						<h3 style={{ width: '70%' }}>The Bar Show {barVariables[0].toLocaleUpperCase()} vs {barVariables[1].toLocaleUpperCase()} Show difference {size} Data </h3>
-						<ButtonGroupCustom
-							selectButton={selectButton}
-							setSelectButton={setSelectButton}
-							setBarVariables={setBarVariables}
-							barVariableNames={barVariableNames}
-						/>
+					<div>
+						<Grid container spacing={3} style={{ marginBottom: '5px' }}>
+							{
+								news.map(newsSingleData =>
+
+									<Grid sx={{ borderRadius: 4 }} item xs={12} sm={6}
+										key={newsSingleData._id}
+									>
+										<Card newsSingleData={newsSingleData} />
+									</Grid>
+								)
+							}
+						</Grid>
+						<div style={{ marginTop: '2rem' }}>
+							<div style={{ display: 'flex' }}>
+								<h3 style={{ width: '70%' }}>The Bar Show {barVariables[0].toLocaleUpperCase()} vs {barVariables[1].toLocaleUpperCase()} Show difference {size} Data </h3>
+								<ButtonGroupCustom
+									selectButton={selectButton}
+									setSelectButton={setSelectButton}
+									setBarVariables={setBarVariables}
+									barVariableNames={barVariableNames}
+								/>
+							</div>
+							<div id='d3demo'>
+								<svg ref={d3Chart}></svg>
+							</div>
+							<h3> {`${barVariables[0].toUpperCase()} ---->>>>`}</h3>
+						</div>
 					</div>
-					<div id='d3demo'>
-						<svg ref={d3Chart}></svg>
+
+
+					<div className="pagination">
+						{
+							[...Array(pageCount).keys()]
+								.map(number => <button
+									className={number === page ? 'selected' : ''}
+									key={number}
+									onClick={() => setPage(number)}
+								>{number + 1}</button>)
+						}
 					</div>
-					<h3> {`${barVariables[0].toUpperCase()} ---->>>>`}</h3>
 				</div>
 			}
-			<div className="pagination">
-				{
-					[...Array(pageCount).keys()]
-						.map(number => <button
-							className={number === page ? 'selected' : ''}
-							key={number}
-							onClick={() => setPage(number)}
-						>{number + 1}</button>)
-				}
-			</div>
-
-
-		</Container>
+		</Container >
 
 	)
 }
