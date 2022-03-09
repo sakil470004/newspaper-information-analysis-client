@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import './ResponsiveBar.css';
 import ButtonGroupCustom from './ButtonGroupCustom';
-import {  Container, FormControl, FormControlLabel, FormLabel, Grid, LinearProgress, Radio, RadioGroup } from '@mui/material';
+import { Container, FormControl, FormControlLabel, FormLabel, Grid, LinearProgress, Radio, RadioGroup } from '@mui/material';
 import Card from '../Card/Card';
 
 
@@ -26,12 +26,13 @@ const Chart = () => {
 	const [barVariables, setBarVariables] = useState(['region', 'relevance'])
 	// const [samples, setSamples] = useState([])
 	// Ref for resize event update
-	
+
 	const [searchField, setSearchField] = useState('')
 	const [news, setNews] = useState([])
 	const [page, setPage] = useState(0);
 	const [size, setSize] = useState(10);
 	const [isLoading, setLoading] = useState(false)
+	const [dataChanged, setDataChanged] = useState(false)
 	const [filteredNews, setFilteredNews] = useState([])
 
 	const [pageCount, setPageCount] = useState(0);
@@ -42,6 +43,9 @@ const Chart = () => {
 	// search function
 	const handleOnChange = (e) => {
 		setSearchField(e.target.value)
+		if (searchField === '') {
+			setDataChanged(!dataChanged)
+		}
 	}
 	// radio button 
 
@@ -51,7 +55,7 @@ const Chart = () => {
 	};
 	useEffect(() => {
 		setLoading(true)
-		
+
 
 		fetch(`https://user-data-collector.herokuapp.com/newspapersSearch?searchField=${searchField}&&searchBy=${radioValue}`)
 			.then(res => res.json())
@@ -90,7 +94,8 @@ const Chart = () => {
 			})
 
 
-	}, [page, selectButton])
+	}, [page, selectButton, dataChanged])
+
 
 	const margin = { top: 30, right: 10, bottom: 0, left: 60 }
 
@@ -180,51 +185,51 @@ const Chart = () => {
 				</Grid>
 			}
 
-			{(!isLoading && !searchField.length) &&
+
+			<div style={{ display: searchField ? 'none' : 'block' }}>
 				<div>
-					<div>
-						<Grid container spacing={3} style={{ marginBottom: '5px' }}>
-							{
-								news.map(newsSingleData =>
-
-									<Grid sx={{ borderRadius: 4 }} item xs={12} sm={6}
-										key={newsSingleData._id}
-									>
-										<Card newsSingleData={newsSingleData} />
-									</Grid>
-								)
-							}
-						</Grid>
-						<div style={{ marginTop: '2rem' }}>
-							<div style={{ display: 'flex' }}>
-								<h3 style={{ width: '70%' }}>The Bar Show {barVariables[0].toLocaleUpperCase()} vs {barVariables[1].toLocaleUpperCase()} Show difference {size} Data </h3>
-								<ButtonGroupCustom
-									selectButton={selectButton}
-									setSelectButton={setSelectButton}
-									setBarVariables={setBarVariables}
-									barVariableNames={barVariableNames}
-								/>
-							</div>
-							<div id='d3demo'>
-								<svg ref={d3Chart}></svg>
-							</div>
-							<h3> {`${barVariables[0].toUpperCase()} ---->>>>`}</h3>
-						</div>
-					</div>
-
-
-					<div className="pagination">
+					<Grid container spacing={3} style={{ marginBottom: '5px' }}>
 						{
-							[...Array(pageCount).keys()]
-								.map(number => <button
-									className={number === page ? 'selected' : ''}
-									key={number}
-									onClick={() => setPage(number)}
-								>{number + 1}</button>)
+							news.map(newsSingleData =>
+
+								<Grid sx={{ borderRadius: 4 }} item xs={12} sm={6}
+									key={newsSingleData._id}
+								>
+									<Card newsSingleData={newsSingleData} />
+								</Grid>
+							)
 						}
+					</Grid>
+					<div style={{ marginTop: '2rem' }}>
+						<div style={{ display: 'flex' }}>
+							<h3 style={{ width: '70%' }}>The Bar Show {barVariables[0].toLocaleUpperCase()} vs {barVariables[1].toLocaleUpperCase()} Show difference {size} Data </h3>
+							<ButtonGroupCustom
+								selectButton={selectButton}
+								setSelectButton={setSelectButton}
+								setBarVariables={setBarVariables}
+								barVariableNames={barVariableNames}
+							/>
+						</div>
+						<div id='d3demo'>
+							<svg ref={d3Chart}></svg>
+						</div>
+						<h3> {`${barVariables[0].toUpperCase()} ---->>>>`}</h3>
 					</div>
 				</div>
-			}
+
+
+				<div className="pagination">
+					{
+						[...Array(pageCount).keys()]
+							.map(number => <button
+								className={number === page ? 'selected' : ''}
+								key={number}
+								onClick={() => setPage(number)}
+							>{number + 1}</button>)
+					}
+				</div>
+			</div>
+
 		</Container>
 
 	)
