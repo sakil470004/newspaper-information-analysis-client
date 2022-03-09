@@ -53,7 +53,7 @@ const Chart = () => {
 		setLoading(true)
 		
 
-		fetch(`http://localhost:5000/newspapersSearch?searchField=${searchField}&&searchBy=${radioValue}`)
+		fetch(`https://user-data-collector.herokuapp.com/newspapersSearch?searchField=${searchField}&&searchBy=${radioValue}`)
 			.then(res => res.json())
 			.then(data => {
 				setFilteredNews(data)
