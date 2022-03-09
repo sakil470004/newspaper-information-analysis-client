@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import './ResponsiveBar.css';
 import ButtonGroupCustom from './ButtonGroupCustom';
-import { Button, CircularProgress, Container, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup } from '@mui/material';
+import {  Container, FormControl, FormControlLabel, FormLabel, Grid, LinearProgress, Radio, RadioGroup } from '@mui/material';
 import Card from '../Card/Card';
 
 
@@ -26,10 +26,9 @@ const Chart = () => {
 	const [barVariables, setBarVariables] = useState(['region', 'relevance'])
 	// const [samples, setSamples] = useState([])
 	// Ref for resize event update
-
+	
 	const [searchField, setSearchField] = useState('')
 	const [news, setNews] = useState([])
-	const [allNews, setAllNews] = useState([])
 	const [page, setPage] = useState(0);
 	const [size, setSize] = useState(10);
 	const [isLoading, setLoading] = useState(false)
@@ -44,17 +43,6 @@ const Chart = () => {
 	const handleOnChange = (e) => {
 		setSearchField(e.target.value)
 	}
-	const handleSearch = () => {
-		setLoading(true)
-		filter()
-		setLoading(false)
-	}
-	const filter = () => {
-		const ftNews = allNews.filter(nws => {
-			return nws[radioValue].toLowerCase().includes(searchField.toLowerCase())
-		})
-		setFilteredNews(ftNews)
-	}
 	// radio button 
 
 
@@ -63,13 +51,15 @@ const Chart = () => {
 	};
 	useEffect(() => {
 		setLoading(true)
-		fetch('https://user-data-collector.herokuapp.com/newspapersAll')
+		
+
+		fetch(`http://localhost:5000/newspapersSearch?searchField=${searchField}&&searchBy=${radioValue}`)
 			.then(res => res.json())
 			.then(data => {
-				setAllNews(data)
+				setFilteredNews(data)
 				setLoading(false)
 			})
-	}, [])
+	}, [searchField, radioValue])
 	useEffect(() => {
 		setLoading(true)
 		fetch(`https://user-data-collector.herokuapp.com/newspapers?page=${page}&&size=${size}`)
@@ -173,9 +163,8 @@ const Chart = () => {
 					</RadioGroup>
 				</FormControl>
 				<input style={{ borderRadius: '15px', padding: '15px', fontSize: '20px', margin: '2rem' }} onChange={handleOnChange} placeholder={`Search for ${radioValue}`}></input>
-				<Button onClick={handleSearch}>Search</Button>
 			</div>
-			{/* {(isLoading && !searchField.length) ? <CircularProgress style={{ height: '680px' }} /> : */}
+			{isLoading && <LinearProgress />}
 			{(searchField.length && !isLoading) &&
 				<Grid container spacing={3} style={{ marginBottom: '5px' }}>
 					{
@@ -191,7 +180,7 @@ const Chart = () => {
 				</Grid>
 			}
 
-			{!searchField.length &&
+			{(!isLoading && !searchField.length) &&
 				<div>
 					<div>
 						<Grid container spacing={3} style={{ marginBottom: '5px' }}>
@@ -236,7 +225,7 @@ const Chart = () => {
 					</div>
 				</div>
 			}
-		</Container >
+		</Container>
 
 	)
 }
